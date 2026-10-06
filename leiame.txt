@@ -1,0 +1,37 @@
+TP2 (CIC0198) - Trabalho 2 - Sistema de Backup com TDD
+Aluno: Lucas Drumond - Matricula: 231011650
+
+DESCRICAO
+  Biblioteca C++17 que faz backup (HD -> pendrive) ou restauracao
+  (pendrive -> HD) dos arquivos listados em Backup.parm, seguindo a tabela
+  de decisao dos slides 23-26 (testes de caixa fechada). HD e pendrive sao
+  representados por diretorios.
+
+ARQUIVOS
+  backup.hpp         interface do modulo (documentada para o Doxygen)
+  backup.cpp         implementacao do modulo
+  testa_backup.cpp   testes Google Test (um por coluna da tabela de decisao)
+  Makefile           compilacao, testes e ferramentas de verificacao
+  Doxyfile           configuracao do Doxygen
+  CPPLINT.cfg        configuracao do cpplint
+  Docs/              enunciado, slides e plano TDD (Docs/PLANO_TDD.md)
+  scripts/           script de instalacao do ambiente
+
+AMBIENTE (Linux)
+  Requer: g++ (C++17), make, libgtest-dev, gcov, valgrind, cppcheck,
+  cpplint, doxygen, gdb, zip.
+  No Ubuntu/GitHub Codespaces basta rodar:
+      bash scripts/setup_ambiente.sh
+
+COMO COMPILAR E EXECUTAR
+  make            compila o executavel de testes (testa_backup)
+  make test       compila e executa os testes
+  make cpplint    verificacao de estilo
+  make cppcheck   analise estatica (cppcheck --enable=warning .)
+  make valgrind   analise dinamica de memoria
+  make coverage   cobertura com gcov (gera backup.cpp.gcov; minimo 80%)
+  make verifica   executa todas as verificacoes acima
+  make doc        gera a documentacao em doxygen/html/index.html
+  make gdb        abre o executavel de testes no gdb
+  make zip        gera 231011650_Lucas.zip (inclui o diretorio .git)
+  make clean      remove arquivos gerados

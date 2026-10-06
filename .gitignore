@@ -1,0 +1,21 @@
+# Binários e objetos
+*.o
+testa_backup
+
+# Cobertura (gcov)
+*.gcda
+*.gcno
+*.gcov
+gcov_resumo.txt
+
+# Documentação gerada (Doxygen)
+doxygen/
+
+# Pacote de entrega
+*.zip
+
+# Editores / SO
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

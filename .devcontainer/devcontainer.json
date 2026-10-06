@@ -1,0 +1,15 @@
+{
+  "name": "TP2 - Trabalho 2 (Backup com TDD)",
+  "image": "mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04",
+  "capAdd": ["SYS_PTRACE"],
+  "securityOpt": ["seccomp=unconfined"],
+  "postCreateCommand": "bash scripts/setup_ambiente.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+# Força finais de linha LF: o projeto é desenvolvido no Windows mas
+# compilado no Linux (Codespaces). CRLF quebra Makefile e scripts bash.
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+*.zip binary
