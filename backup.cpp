@@ -122,6 +122,13 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
       continue;
     }
 
+    if (operacao == Operacao::kRestauracao && !arq_no_hd &&
+        arq_no_pendrive) {
+      Copia(caminho_pendrive, caminho_hd);
+      relatorio.acoes.push_back(Acao::kPendriveParaHd);
+      continue;
+    }
+
     if (operacao == Operacao::kRestauracao && arq_no_hd && !arq_no_pendrive) {
       relatorio.acoes.push_back(Acao::kErro);
       relatorio.mensagens_erro.push_back(
