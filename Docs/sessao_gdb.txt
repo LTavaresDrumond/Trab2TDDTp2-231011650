@@ -1,0 +1,34 @@
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Reading symbols from ./testa_backup...
+
+(gdb) break backup::DecideAcao
+Breakpoint 1 at 0x47d90: file backup.cpp, line 44.
+
+(gdb) run
+Starting program: /workspace/Trab2TDDTp2-231011650/testa_backup 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[==========] Running 16 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 16 tests from BackupTest
+[ RUN      ] BackupTest.Coluna01_SemBackupParm_Impossivel
+
+Breakpoint 1, backup::DecideAcao (tem_parm=false, operacao=backup::Operacao::kBackup, arq_no_hd=true, arq_no_pendrive=false, data=backup::ComparacaoData::kNaoSeAplica) at backup.cpp:44
+44        if (!tem_parm) {
+
+(gdb) print tem_parm
+$1 = false
+
+(gdb) continue
+Continuing.
+[       OK ] BackupTest.Coluna01_SemBackupParm_Impossivel (1 ms)
+
+(gdb) quit
+A debugging session is active.
+	Inferior 1 [process 35624] will be killed.
+Quit anyway? (y or n) y
