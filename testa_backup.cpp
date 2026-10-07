@@ -241,4 +241,14 @@ TEST_F(BackupTest, Coluna11_Backup_SoNoPendrive_Nada) {
   EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "pen");
 }
 
+TEST_F(BackupTest, Coluna12_Restauracao_ArquivoEmNenhumLugar_Erro) {
+  EscreveParm({kArqX});
+  Relatorio r = Executa(Operacao::kRestauracao);
+  EXPECT_EQ(r.resultado, Resultado::kErro);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kErro});
+  EXPECT_EQ(r.mensagens_erro.size(), 1u);
+  EXPECT_FALSE(fs::exists(hd_ / kArqX));
+  EXPECT_FALSE(fs::exists(pendrive_ / kArqX));
+}
+
 }  // namespace
