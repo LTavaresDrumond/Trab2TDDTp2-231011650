@@ -220,4 +220,14 @@ TEST_F(BackupTest, Coluna09_Restauracao_PenDriveMaisNovo_CopiaParaHd) {
             fs::last_write_time(pendrive_ / kArqX));
 }
 
+TEST_F(BackupTest, Coluna10_Backup_ArquivoEmNenhumLugar_Erro) {
+  EscreveParm({kArqX});
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kErro);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kErro});
+  EXPECT_EQ(r.mensagens_erro.size(), 1u);
+  EXPECT_FALSE(fs::exists(hd_ / kArqX));
+  EXPECT_FALSE(fs::exists(pendrive_ / kArqX));
+}
+
 }  // namespace
