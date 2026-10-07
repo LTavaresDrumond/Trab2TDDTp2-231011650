@@ -207,4 +207,17 @@ TEST_F(BackupTest, Coluna08_Restauracao_DatasIguais_Nada) {
   EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "pen");
 }
 
+TEST_F(BackupTest, Coluna09_Restauracao_PenDriveMaisNovo_CopiaParaHd) {
+  EscreveParm({kArqX});
+  CriaArquivo(hd_, kArqX, "velho", Antiga());
+  CriaArquivo(pendrive_, kArqX, "novo", Recente());
+  Relatorio r = Executa(Operacao::kRestauracao);
+  EXPECT_EQ(r.resultado, Resultado::kSucesso);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kPendriveParaHd});
+  EXPECT_TRUE(r.mensagens_erro.empty());
+  EXPECT_EQ(LeConteudo(hd_ / kArqX), "novo");
+  EXPECT_EQ(fs::last_write_time(hd_ / kArqX),
+            fs::last_write_time(pendrive_ / kArqX));
+}
+
 }  // namespace
