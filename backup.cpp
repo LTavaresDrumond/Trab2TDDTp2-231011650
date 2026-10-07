@@ -95,7 +95,8 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
 
     if (operacao == Operacao::kRestauracao && arq_no_hd && !arq_no_pendrive) {
       relatorio.acoes.push_back(Acao::kErro);
-      relatorio.mensagens_erro.push_back("Erro: restauração sem arquivo no pendrive");
+      relatorio.mensagens_erro.push_back(
+          "Erro: restauração sem arquivo no pendrive");
       relatorio.resultado = Resultado::kErro;
       continue;
     }
@@ -107,6 +108,13 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
         relatorio.acoes.push_back(Acao::kErro);
         relatorio.mensagens_erro.push_back("Erro: pendrive mais antigo");
         relatorio.resultado = Resultado::kErro;
+        continue;
+      }
+      if (pen_time > hd_time) {
+        fs::copy_file(caminho_pendrive, caminho_hd,
+                      fs::copy_options::overwrite_existing);
+        fs::last_write_time(caminho_hd, pen_time);
+        relatorio.acoes.push_back(Acao::kPendriveParaHd);
         continue;
       }
     }
