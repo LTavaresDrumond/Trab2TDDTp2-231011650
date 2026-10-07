@@ -174,4 +174,14 @@ TEST_F(BackupTest, Coluna05_Backup_PenDriveMaisNovo_Erro) {
   EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "pen");
 }
 
+TEST_F(BackupTest, Coluna06_Restauracao_SoNoHd_Erro) {
+  EscreveParm({kArqX});
+  CriaArquivo(hd_, kArqX, "hd", Recente());
+  Relatorio r = Executa(Operacao::kRestauracao);
+  EXPECT_EQ(r.resultado, Resultado::kErro);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kErro});
+  EXPECT_EQ(r.mensagens_erro.size(), 1u);
+  EXPECT_EQ(LeConteudo(hd_ / kArqX), "hd");
+}
+
 }  // namespace
