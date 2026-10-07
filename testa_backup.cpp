@@ -153,4 +153,14 @@ TEST_F(BackupTest, Coluna03_Backup_PenDriveMaisAntigo_Copia) {
   EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "novo");
 }
 
+TEST_F(BackupTest, Coluna04_Backup_DatasIguais_Nada) {
+  EscreveParm({kArqX});
+  CriaArquivo(hd_, kArqX, "hd", Recente());
+  CriaArquivo(pendrive_, kArqX, "pen", Recente());
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kSucesso);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kNada});
+  EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "pen");
+}
+
 }  // namespace
