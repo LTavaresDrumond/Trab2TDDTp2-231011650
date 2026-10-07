@@ -272,4 +272,13 @@ TEST_F(BackupTest, Repeticao14_ParmVazio_ZeroIteracoes) {
   EXPECT_TRUE(r.mensagens_erro.empty());
 }
 
+TEST_F(BackupTest, Repeticao15_IgnoraLinhasEmBranco) {
+  EscreveParm({"", kArqX, ""});
+  CriaArquivo(hd_, kArqX, "arquivo", Recente());
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kSucesso);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kHdParaPendrive});
+  EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "arquivo");
+}
+
 }  // namespace
