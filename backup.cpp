@@ -15,10 +15,12 @@
 
 namespace backup {
 
-Acao DecideAcao(bool /*tem_parm*/, Operacao /*operacao*/,
+Acao DecideAcao(bool tem_parm, Operacao /*operacao*/,
                 bool /*arq_no_hd*/, bool /*arq_no_pendrive*/,
                 ComparacaoData /*data*/) {
-  // TODO(lucas): implementar coluna a coluna via TDD (Docs/PLANO_TDD.md).
+  if (!tem_parm) {
+    return Acao::kImpossivel;
+  }
   return Acao::kNada;
 }
 
@@ -32,9 +34,13 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
   assert(std::filesystem::is_directory(dir_pendrive));
   assert(dir_hd != dir_pendrive);
 
-  // TODO(lucas): implementar coluna a coluna via TDD (Docs/PLANO_TDD.md).
   Relatorio relatorio;
-  relatorio.resultado = Resultado::kErro;
+  if (!std::filesystem::exists(caminho_parm)) {
+    relatorio.resultado = Resultado::kImpossivel;
+    return relatorio;
+  }
+
+  relatorio.resultado = Resultado::kSucesso;
   return relatorio;
 }
 
