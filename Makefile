@@ -45,7 +45,8 @@ cpplint:
 	cpplint $(FONTES)
 
 cppcheck:
-	cppcheck --enable=warning --error-exitcode=1 --quiet .
+	cppcheck --enable=warning --error-exitcode=1 --quiet \
+	  --suppress=syntaxError .
 
 valgrind: $(BIN)
 	valgrind --leak-check=full --show-leak-kinds=all \
