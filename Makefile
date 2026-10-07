@@ -80,4 +80,3 @@ zip: clean
 
 clean:
 	rm -f *.o *.gcda *.gcno *.gcov gcov_resumo.txt $(BIN)
-	rm -rf doxygen
