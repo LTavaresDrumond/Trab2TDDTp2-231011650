@@ -132,4 +132,15 @@ TEST_F(BackupTest, Coluna01_SemBackupParm_Impossivel) {
   EXPECT_FALSE(fs::exists(pendrive_ / kArqX));
 }
 
+TEST_F(BackupTest, Coluna02_Backup_SoNoHd_CopiaParaPendrive) {
+  EscreveParm({kArqX});
+  CriaArquivo(hd_, kArqX, "versao HD", Recente());
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kSucesso);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kHdParaPendrive});
+  EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "versao HD");
+  EXPECT_EQ(fs::last_write_time(pendrive_ / kArqX),
+            fs::last_write_time(hd_ / kArqX));
+}
+
 }  // namespace

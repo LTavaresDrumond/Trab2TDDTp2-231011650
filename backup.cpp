@@ -1,25 +1,24 @@
 // Copyright 2026 Lucas Drumond - matricula 231011650
-/**
- * @file backup.cpp
- * @brief Implementação do módulo de backup e restauração.
- *
- * ESTADO ATUAL: apenas stubs. A implementação será construída de forma
- * incremental, um ciclo TDD (RED -> GREEN -> REFACTOR) por coluna da tabela
- * de decisão. Roteiro em Docs/PLANO_TDD.md.
- */
 #include "backup.hpp"
 
 #include <cassert>
 #include <filesystem>
+#include <fstream>
 #include <string>
+#include <vector>
+
+namespace fs = std::filesystem;
 
 namespace backup {
 
-Acao DecideAcao(bool tem_parm, Operacao /*operacao*/,
-                bool /*arq_no_hd*/, bool /*arq_no_pendrive*/,
+Acao DecideAcao(bool tem_parm, Operacao operacao,
+                bool arq_no_hd, bool arq_no_pendrive,
                 ComparacaoData /*data*/) {
   if (!tem_parm) {
     return Acao::kImpossivel;
+  }
+  if (operacao == Operacao::kBackup && arq_no_hd && !arq_no_pendrive) {
+    return Acao::kHdParaPendrive;
   }
   return Acao::kNada;
 }
@@ -27,20 +26,43 @@ Acao DecideAcao(bool tem_parm, Operacao /*operacao*/,
 Relatorio ExecutaBackup(const std::string& caminho_parm,
                         const std::string& dir_hd,
                         const std::string& dir_pendrive,
-                        Operacao /*operacao*/) {
-  // Assertivas de entrada
+                        Operacao operacao) {
   assert(!caminho_parm.empty());
-  assert(std::filesystem::is_directory(dir_hd));
-  assert(std::filesystem::is_directory(dir_pendrive));
+  assert(fs::is_directory(dir_hd));
+  assert(fs::is_directory(dir_pendrive));
   assert(dir_hd != dir_pendrive);
 
   Relatorio relatorio;
-  if (!std::filesystem::exists(caminho_parm)) {
+  if (!fs::exists(caminho_parm)) {
     relatorio.resultado = Resultado::kImpossivel;
     return relatorio;
   }
 
   relatorio.resultado = Resultado::kSucesso;
+  std::ifstream entrada(caminho_parm);
+  std::string nome;
+  while (std::getline(entrada, nome)) {
+    if (nome.empty()) {
+      continue;
+    }
+
+    const fs::path caminho_hd = fs::path(dir_hd) / nome;
+    const fs::path caminho_pendrive = fs::path(dir_pendrive) / nome;
+    const bool arq_no_hd = fs::exists(caminho_hd);
+    const bool arq_no_pendrive = fs::exists(caminho_pendrive);
+
+    if (operacao == Operacao::kBackup && arq_no_hd && !arq_no_pendrive) {
+      fs::copy_file(caminho_hd, caminho_pendrive,
+                    fs::copy_options::overwrite_existing);
+      fs::last_write_time(caminho_pendrive,
+                          fs::last_write_time(caminho_hd));
+      relatorio.acoes.push_back(Acao::kHdParaPendrive);
+      continue;
+    }
+
+    relatorio.acoes.push_back(Acao::kNada);
+  }
+
   return relatorio;
 }
 
