@@ -115,16 +115,7 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
       }
     }
 
-    if (operacao == Operacao::kBackup && !arq_no_hd &&
-        !arq_no_pendrive) {
-      relatorio.acoes.push_back(Acao::kErro);
-      relatorio.mensagens_erro.push_back("Erro: arquivo ausente");
-      relatorio.resultado = Resultado::kErro;
-      continue;
-    }
-
-    if (operacao == Operacao::kRestauracao && !arq_no_hd &&
-        !arq_no_pendrive) {
+    if (!arq_no_hd && !arq_no_pendrive) {
       relatorio.acoes.push_back(Acao::kErro);
       relatorio.mensagens_erro.push_back("Erro: arquivo ausente");
       relatorio.resultado = Resultado::kErro;
