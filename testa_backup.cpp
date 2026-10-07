@@ -143,4 +143,14 @@ TEST_F(BackupTest, Coluna02_Backup_SoNoHd_CopiaParaPendrive) {
             fs::last_write_time(hd_ / kArqX));
 }
 
+TEST_F(BackupTest, Coluna03_Backup_PenDriveMaisAntigo_Copia) {
+  EscreveParm({kArqX});
+  CriaArquivo(hd_, kArqX, "novo", Recente());
+  CriaArquivo(pendrive_, kArqX, "velho", Antiga());
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kSucesso);
+  EXPECT_EQ(r.acoes, std::vector<Acao>{Acao::kHdParaPendrive});
+  EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "novo");
+}
+
 }  // namespace
