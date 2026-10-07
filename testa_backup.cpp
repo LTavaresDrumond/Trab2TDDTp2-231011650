@@ -264,4 +264,12 @@ TEST_F(BackupTest, Coluna13_Restauracao_SoNoPendrive_CopiaParaHd) {
             fs::last_write_time(pendrive_ / kArqX));
 }
 
+TEST_F(BackupTest, Repeticao14_ParmVazio_ZeroIteracoes) {
+  EscreveParm({});
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kSucesso);
+  EXPECT_TRUE(r.acoes.empty());
+  EXPECT_TRUE(r.mensagens_erro.empty());
+}
+
 }  // namespace
