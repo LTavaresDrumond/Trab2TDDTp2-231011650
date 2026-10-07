@@ -281,4 +281,23 @@ TEST_F(BackupTest, Repeticao15_IgnoraLinhasEmBranco) {
   EXPECT_EQ(LeConteudo(pendrive_ / kArqX), "arquivo");
 }
 
+TEST_F(BackupTest, Repeticao16_VariosArquivos_MantemAcoesEAcoesParciais) {
+  EscreveParm({"a.txt", "b.txt", "c.txt"});
+  CriaArquivo(hd_, "a.txt", "novo A", Recente());
+  CriaArquivo(hd_, "b.txt", "HD B", Recente());
+  CriaArquivo(pendrive_, "b.txt", "Pen B", Recente());
+  CriaArquivo(hd_, "c.txt", "HD C", Antiga());
+  CriaArquivo(pendrive_, "c.txt", "Pen C", Recente());
+
+  Relatorio r = Executa(Operacao::kBackup);
+
+  EXPECT_EQ(r.resultado, Resultado::kErro);
+  EXPECT_EQ(r.acoes, (std::vector<Acao>{Acao::kHdParaPendrive, Acao::kNada,
+                                        Acao::kErro}));
+  EXPECT_EQ(r.mensagens_erro.size(), 1u);
+  EXPECT_EQ(LeConteudo(pendrive_ / "a.txt"), "novo A");
+  EXPECT_EQ(LeConteudo(pendrive_ / "b.txt"), "Pen B");
+  EXPECT_EQ(LeConteudo(pendrive_ / "c.txt"), "Pen C");
+}
+
 }  // namespace
