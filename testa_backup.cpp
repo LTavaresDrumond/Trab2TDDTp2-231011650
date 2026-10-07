@@ -124,7 +124,12 @@ class BackupTest : public ::testing::Test {
   fs::file_time_type agora_;   /**< Instante de referência das datas. */
 };
 
-// Os testes (TEST_F(BackupTest, ...)) serão adicionados um a um, seguindo
-// o ciclo RED -> GREEN -> REFACTOR descrito em Docs/PLANO_TDD.md.
+TEST_F(BackupTest, Coluna01_SemBackupParm_Impossivel) {
+  CriaArquivo(hd_, kArqX, "hd", Recente());
+  Relatorio r = Executa(Operacao::kBackup);
+  EXPECT_EQ(r.resultado, Resultado::kImpossivel);
+  EXPECT_TRUE(r.acoes.empty());
+  EXPECT_FALSE(fs::exists(pendrive_ / kArqX));
+}
 
 }  // namespace
