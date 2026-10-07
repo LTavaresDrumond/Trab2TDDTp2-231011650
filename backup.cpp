@@ -24,6 +24,10 @@ Acao DecideAcao(bool tem_parm, Operacao operacao,
       data == ComparacaoData::kPendriveMaisAntigo) {
     return Acao::kHdParaPendrive;
   }
+  if (operacao == Operacao::kBackup && arq_no_hd && arq_no_pendrive &&
+      data == ComparacaoData::kPendriveMaisNovo) {
+    return Acao::kErro;
+  }
   return Acao::kNada;
 }
 
@@ -72,6 +76,12 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
                       fs::copy_options::overwrite_existing);
         fs::last_write_time(caminho_pendrive, hd_time);
         relatorio.acoes.push_back(Acao::kHdParaPendrive);
+        continue;
+      }
+      if (pen_time > hd_time) {
+        relatorio.acoes.push_back(Acao::kErro);
+        relatorio.mensagens_erro.push_back("Erro: pendrive mais novo");
+        relatorio.resultado = Resultado::kErro;
         continue;
       }
     }
