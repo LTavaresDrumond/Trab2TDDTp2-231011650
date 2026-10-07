@@ -28,6 +28,9 @@ Acao DecideAcao(bool tem_parm, Operacao operacao,
       data == ComparacaoData::kPendriveMaisNovo) {
     return Acao::kErro;
   }
+  if (operacao == Operacao::kRestauracao && arq_no_hd && !arq_no_pendrive) {
+    return Acao::kErro;
+  }
   return Acao::kNada;
 }
 
@@ -84,6 +87,13 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
         relatorio.resultado = Resultado::kErro;
         continue;
       }
+    }
+
+    if (operacao == Operacao::kRestauracao && arq_no_hd && !arq_no_pendrive) {
+      relatorio.acoes.push_back(Acao::kErro);
+      relatorio.mensagens_erro.push_back("Erro: restauração sem arquivo no pendrive");
+      relatorio.resultado = Resultado::kErro;
+      continue;
     }
 
     relatorio.acoes.push_back(Acao::kNada);
