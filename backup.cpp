@@ -13,11 +13,15 @@ namespace backup {
 
 Acao DecideAcao(bool tem_parm, Operacao operacao,
                 bool arq_no_hd, bool arq_no_pendrive,
-                ComparacaoData /*data*/) {
+                ComparacaoData data) {
   if (!tem_parm) {
     return Acao::kImpossivel;
   }
   if (operacao == Operacao::kBackup && arq_no_hd && !arq_no_pendrive) {
+    return Acao::kHdParaPendrive;
+  }
+  if (operacao == Operacao::kBackup && arq_no_hd && arq_no_pendrive &&
+      data == ComparacaoData::kPendriveMaisAntigo) {
     return Acao::kHdParaPendrive;
   }
   return Acao::kNada;
@@ -58,6 +62,18 @@ Relatorio ExecutaBackup(const std::string& caminho_parm,
                           fs::last_write_time(caminho_hd));
       relatorio.acoes.push_back(Acao::kHdParaPendrive);
       continue;
+    }
+
+    if (operacao == Operacao::kBackup && arq_no_hd && arq_no_pendrive) {
+      const auto hd_time = fs::last_write_time(caminho_hd);
+      const auto pen_time = fs::last_write_time(caminho_pendrive);
+      if (pen_time < hd_time) {
+        fs::copy_file(caminho_hd, caminho_pendrive,
+                      fs::copy_options::overwrite_existing);
+        fs::last_write_time(caminho_pendrive, hd_time);
+        relatorio.acoes.push_back(Acao::kHdParaPendrive);
+        continue;
+      }
     }
 
     relatorio.acoes.push_back(Acao::kNada);
